@@ -1,0 +1,83 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ADPlayer.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="clr-namespace:ADPlayer.Views"
+        mc:Ignorable="d" d:DesignWidth="420" d:DesignHeight="160"
+		MinWidth="420"
+		MinHeight="160"
+		Width="420"
+		Height="160"
+        x:Class="ADPlayer.Views.MainWindow"
+        Icon="/Assets/adplayer_white-logo.ico"
+        Title="AD Player"
+		x:DataType="vm:MainViewModel">
+
+	<Window.Styles>
+		<Style Selector="Button#CloseButton:pointerover /template/ ContentPresenter">
+			<Setter Property="Background" Value="Red"/>
+			<Setter Property="CornerRadius" Value="4"/>
+		</Style>
+	</Window.Styles>
+	
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+		<Grid Grid.Row="0"
+			  x:Name="TitleBarGrid"
+			  DockPanel.Dock="Top"
+			  Height="40"
+			  Background="#66FFFFFF"
+			  PointerPressed="Header_PointerPressed">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="Auto"/>
+			</Grid.ColumnDefinitions>
+			<Image Source="/Assets/adplayer-logo.ico" Width="24" Height="24" Margin="8"/>
+			<TextBlock Grid.Column="1"
+                 Text="{Binding FileName}"
+                 VerticalAlignment="Center"
+                 HorizontalAlignment="Center"
+                 FontWeight="Bold"/>
+			<StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+				<Button Click="Minimize_Click"
+						Width="40" Height="40"
+						ToolTip.Tip="Minimize"> 
+					<TextBlock Classes="icon" FontFamily="{DynamicResource AppFont}" FontSize="16" Text="&#xF030;"/>
+				</Button>
+				<Button Click="MaximizeRestore_Click"
+						Width="40" Height="40"
+						ToolTip.Tip="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource WindowStateToTooltipConverter}}">
+					<TextBlock Classes="icon"
+							   FontFamily="{DynamicResource AppFont}"
+							   FontSize="16"
+							   Text="{Binding WindowState, 
+									RelativeSource={RelativeSource AncestorType=Window}, 
+									Converter={StaticResource WindowStateIcon}}"/>
+				</Button>
+				<Button x:Name="CloseButton"
+						Click="Close_Click"
+						Width="40" Height="40"
+						ToolTip.Tip="Close">
+					<TextBlock Classes="icon" FontFamily="{DynamicResource AppFont}" FontSize="16" Text="&#xF072;"/>
+				</Button>
+			</StackPanel>
+		</Grid>
+		<Viewbox Grid.Row="1"
+             Stretch="Uniform"
+             HorizontalAlignment="Center"
+             VerticalAlignment="Center"
+             Margin="6">
+			<Image Source="{Binding AlbumArt, Converter={StaticResource NullToDefaultImage}}"
+				   Stretch="Uniform"
+				   HorizontalAlignment="Center"
+				   VerticalAlignment="Center"/>
+		</Viewbox>
+		<views:MainView Grid.Row="2" Padding="12"/>
+	</Grid>
+</Window>

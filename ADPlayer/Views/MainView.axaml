@@ -1,0 +1,81 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:ADPlayer.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="420" d:DesignHeight="100"
+             x:Class="ADPlayer.Views.MainView"
+             x:DataType="vm:MainViewModel">
+	<StackPanel>
+		<Grid VerticalAlignment="Center">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="Auto"/>
+			</Grid.ColumnDefinitions>
+			<TextBlock Grid.Column="0"
+					   Text="{Binding PositionSeconds, Converter={StaticResource SecondsToTimeSpan}}"
+					   MinWidth="48"
+					   VerticalAlignment="Center"/>
+			<Slider   Grid.Column="1" x:Name="PositionSlider"
+					  Minimum="0" Maximum="{Binding DurationSeconds}"
+					  Value="{Binding PositionSeconds, Mode=TwoWay,FallbackValue=0}"
+					  IsSnapToTickEnabled="False"
+					  FocusAdorner=""/>
+			<TextBlock Grid.Column="2"
+					   Text="{Binding DurationSeconds, Converter={StaticResource SecondsToTimeSpan}}"
+					   MinWidth="40"
+					   VerticalAlignment="Center"
+					   Margin="8,0,0,0"/>
+		</Grid>
+
+		<StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+			<Button Width="40" Command="{Binding TogglePlayPauseCommand}" Background="Transparent">
+				<TextBlock Classes="icon" Text="{Binding IsPlaying, Converter={StaticResource PlayPauseConverter}}"/>
+			</Button>
+			<Button Width="40" Command="{Binding StopCommand}" Background="Transparent">
+				<TextBlock Classes="icon" Text="&#xE047;"/>
+			</Button>
+			<Button Width="40" Name="BrowseButton" Background="Transparent">
+				<TextBlock Classes="icon" Text="&#xE2C7;"/>
+			</Button>
+			<ToggleButton x:Name="VolumeButton"
+              IsChecked="{Binding IsVolumePopupOpen, Mode=TwoWay}"
+              Background="Transparent" BorderThickness="0">
+				<TextBlock Classes="icon"
+						   Text="{Binding Volume, Converter={StaticResource VolumeToIcon}}"/>
+			</ToggleButton>
+			<Popup PlacementTarget="{Binding ElementName=VolumeButton}"
+				   IsOpen="{Binding IsVolumePopupOpen}">
+				<Border Background="#66FFFFFF" Padding="8" CornerRadius="4">
+					<Slider Minimum="0" Maximum="1" Value="{Binding Volume}" Width="120"/>
+				</Border>
+			</Popup>
+
+			<ToggleButton x:Name="SpeakerButton"
+              IsChecked="{Binding IsSpeakerPopupOpen, Mode=TwoWay}"
+              Background="Transparent" BorderThickness="0">
+				<TextBlock Classes="icon" Text="&#xE32D;"/>
+			</ToggleButton>
+			<Popup PlacementTarget="{Binding ElementName=SpeakerButton}"
+				   IsOpen="{Binding IsSpeakerPopupOpen}">
+				<Border Background="#66FFFFFF" Padding="8" CornerRadius="4">
+					<ListBox ItemsSource="{Binding OutputDevices}"
+							SelectedIndex="{Binding SelectedDeviceIndex}"
+							MaxHeight="200"
+							MaxWidth="480"
+							MinWidth="360"
+							BorderThickness="0">
+						<ListBox.ItemTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding}"
+										   TextWrapping="Wrap"
+										   Margin="2"/>
+							</DataTemplate>
+						</ListBox.ItemTemplate>
+					</ListBox>
+				</Border>
+			</Popup>
+		</StackPanel>
+	</StackPanel>
+</UserControl>
